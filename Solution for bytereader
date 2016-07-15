@@ -1,0 +1,54 @@
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.*;
+
+/* Самые частые байты
+Ввести с консоли имя файла
+Найти байт или байты с максимальным количеством повторов
+Вывести их на экран через пробел
+Закрыть поток ввода-вывода
+*/
+
+public class Solution {
+    public static void main(String[] args) throws Exception
+    {
+        ArrayList<Integer> arrayInput = new ArrayList<>();
+        HashMap<Integer, Integer> inputMap = new HashMap<>();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+        String name = reader.readLine();
+        FileInputStream inputStream = new FileInputStream(name);
+        while(inputStream.available()>0)
+        {
+            arrayInput.add(inputStream.read());
+            // System.out.println(inputStream.read());
+        }
+        for (int i = 0; i < arrayInput.size(); i++)
+        {
+            int number = arrayInput.get(i);
+            int repetition = 0;
+            for (int x:arrayInput)
+            {
+                if(x == number)
+                {
+                    repetition++;
+                }
+            }
+
+            inputMap.put(number, repetition-1);
+        }
+
+
+        int maxValue =(Collections.max(inputMap.values())); 
+
+        for (HashMap.Entry<Integer, Integer> ent : inputMap.entrySet()) {
+            if(ent.getValue()== maxValue)
+            {
+                System.out.print(ent.getKey()+ " ");
+            }
+        }
+
+        reader.close();
+    }
+
+}
