@@ -1,0 +1,112 @@
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Main {
+    public static List<LineItem> lines = new ArrayList<LineItem>();
+
+    public static void main(String[] args) throws IOException {
+        BufferedReader readString = new BufferedReader(new InputStreamReader(System.in));
+        String fileName1 = readString.readLine();
+        String fileName2 = readString.readLine();
+        FileReader input1 = new FileReader(fileName1);
+        BufferedReader reader1 = new BufferedReader(input1);
+        FileReader input2 = new FileReader(fileName2);
+        BufferedReader reader2 = new BufferedReader(input2);
+        String s = reader1.readLine();
+        String s2 = reader2.readLine();
+        ArrayList<String> file1 = new ArrayList<>();
+        ArrayList<String> file2 = new ArrayList<>();
+
+       while(s != null){
+            file1.add(s);
+           s = reader1.readLine();
+            }
+       while(true){
+
+          if(s2 != null){
+              file2.add(s2);
+          }
+          else{
+              String cache = s2;
+              s2 = reader2.readLine();
+              if(s2 != null){
+                  file2.add(cache);
+                  file2.add(s2);
+
+              }
+              else{
+                  break;
+              }
+              }
+              s2 = reader2.readLine();
+          }
+            int maxi =0;
+            for (int i =0; i<file2.size() && i<file1.size(); i++ ){
+                String sf1 = file1.get(i);
+                String sf2 = file2.get(i);
+                if(sf1.equals(sf2)){
+                    lines.add(new LineItem(Type.SAME, sf1));
+                }
+                    else if(!sf1.equals(sf2)&& !(sf2.trim()).isEmpty()){
+                        lines.add(new LineItem(Type.ADDED, sf2));
+                    }
+                    else if(sf2.trim().isEmpty()){lines.add(new LineItem(Type.REMOVED, sf1));
+                    }
+                    maxi=i;
+
+            }
+        if(file2.size()> maxi){
+            for(int i = maxi; i< file2.size();i++){
+                if (file1.contains(file2.get(i))) {
+                    lines.add(new LineItem(Type.SAME, file2.get(i)));
+                }
+                else if(file2.get(i).trim().isEmpty()){
+
+                }
+                else{ lines.add(new LineItem(Type.ADDED, file2.get(i)));}
+            }
+        }
+
+        else if(file1.size()> maxi){
+            for(int i = maxi; i< file1.size();i++){
+                if (file2.contains(file1.get(i))) {
+                    lines.add(new LineItem(Type.SAME, file1.get(i)));
+                }
+                else{
+                    lines.add(new LineItem(Type.REMOVED, file1.get(i)));
+                }
+            }
+        }
+
+
+
+        reader1.close();
+        readString.close();
+        reader2.close();
+        for (LineItem l : lines) {
+            System.out.println(l.type + " " + l.line);
+        }
+    }
+
+
+    public static enum Type {
+        ADDED,        //добавлена новая строка
+        REMOVED,      //удалена строка
+        SAME          //без изменений
+    }
+
+    public static class LineItem {
+        public Type type;
+        public String line;
+
+        public LineItem(Type type, String line) {
+            this.type = type;
+            this.line = line;
+        }
+    }
+}
